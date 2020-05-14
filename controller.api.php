@@ -18,17 +18,60 @@ class controller{
 
     function getHospitales(){
 
-        // $model=new model();
+        $query=selectAll('hospital');
 
-        return selectAll('hospital');
+        foreach($query as $q){
+            $datos[]=array(
+                "id"=>$q['id'],
+                "nombre"=>$q['nombre'],
+                "telefono"=>$q['telefono'],
+                "direccion"=>$q['direccion'],
+                "nit"=>$q['nit'],
+                "representante"=>$q['representante']
+            );
+        }
 
+        return $datos;
+    }
+
+    function getHospital($id){
+
+        $model=new model();
+
+        $q=$model->getHospital($id);
+
+            $datos=array(
+                "id"=>$q['id'],
+                "nombre"=>$q['nombre'],
+                "telefono"=>$q['telefono'],
+                "direccion"=>$q['direccion'],
+                "nit"=>$q['nit'],
+                "representante"=>$q['representante']
+            );
+        
+
+        return $datos;
     }
 
     function getDoctores($hospital){
 
         $model=new model();
 
-        return $model->getDoctores($hospital);
+        $query= $model->getDoctores($hospital);
+
+        foreach($query as $q){
+            $datos[]=array(
+                "id"=>$q['hospital_ID'],
+                "nombre"=>$q['nombre'],
+                "direccion"=>$q['direccion'],
+                "telefono"=>$q['telefono'],
+                "tiposangre"=>$q['tipo_sangre'],
+                "experiencia"=>$q['experiencia'],
+                "nacimiento"=>$q['nacimiento']
+            );
+        }
+
+        return $datos;
 
     }
 
@@ -66,11 +109,20 @@ switch($option){
         echo $prepFile;
     break;
 
+    case "getHospital":
+        $hospital=$_GET['hospital'];
+        $datos=$class->getHospital($hospital);
+        $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
+        $file=file_put_contents("allHospital.json", $prepFile);
+        echo $prepFile;
+    break;
+
     case "getDoctores":
         $hospital=$_GET['hospital'];
         $datos=$class->getDoctores($hospital);
         $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
         $file=file_put_contents("allPDoctores.json", $prepFile);
+        echo $prepFile;
     break;
 
 // Bloque POST para realizar los insert correspondientes

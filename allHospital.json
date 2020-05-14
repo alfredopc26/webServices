@@ -1,16 +1,8 @@
-[
-    {
-        "0": "1",
-        "id": "1",
-        "1": "Hospital CAP",
-        "nombre": "Hospital CAP",
-        "2": "3069811",
-        "telefono": "3069811",
-        "3": "cra 29 99 24",
-        "direccion": "cra 29 99 24",
-        "4": "1051418846",
-        "nit": "1051418846",
-        "5": "Carlos Perez",
-        "representante": "Carlos Perez"
-    }
-]
+{
+    "id": "1",
+    "nombre": "Hospital CAP",
+    "telefono": "3069811",
+    "direccion": "cra 29 99 24",
+    "nit": "1051418846",
+    "representante": "Carlos Perez"
+}

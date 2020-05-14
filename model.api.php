@@ -13,6 +13,16 @@ class model{
         return $datos;
     }
 
+    function getHospital($id){
+
+      $sql="select * from hospital where id='$id'";
+      $conn=retornarConexion();
+      $registros=mysqli_query($conn,$sql);
+      $reg=mysqli_fetch_array($registros);
+       
+      return $reg;
+  }
+
 
     function postHospital($request){
 

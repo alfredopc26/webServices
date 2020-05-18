@@ -1,8 +1,18 @@
-{
-    "id": "1",
-    "nombre": "Hospital CAP",
-    "telefono": "3069811",
-    "direccion": "cra 29 99 24",
-    "nit": "1051418846",
-    "representante": "Carlos Perez"
-}
+[
+    {
+        "id": "1",
+        "nombre": "Hospital CAP",
+        "telefono": "3069811",
+        "direccion": "cra 29 99 24",
+        "nit": "1051418846",
+        "representante": "Carlos Perez"
+    },
+    {
+        "id": "2",
+        "nombre": "Perez Hospital",
+        "telefono": "3000026",
+        "direccion": "cra 25 12-43",
+        "nit": "802000989",
+        "representante": "Alfredo Cassiani"
+    }
+]

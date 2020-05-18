@@ -13,6 +13,17 @@ class model{
         return $datos;
     }
 
+    function getTriage($hospítal){
+
+      $sql="select * from triage where hospital_ID='$hospítal'";
+      $conn=retornarConexion();
+      $registros=mysqli_query($conn,$sql);
+        while ($reg=mysqli_fetch_array($registros)){
+          $datos[]=$reg;
+       }
+      return $datos;
+  }
+
     function getHospital($id){
 
       $sql="select * from hospital where id='$id'";
@@ -22,6 +33,16 @@ class model{
        
       return $reg;
   }
+
+  function getPaciente($id){
+
+    $sql="select * from paciente where identificacion='$id'";
+    $conn=retornarConexion();
+    $registros=mysqli_query($conn,$sql);
+    $reg=mysqli_fetch_array($registros);
+     
+    return $reg;
+}
 
 
     function postHospital($request){

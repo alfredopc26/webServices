@@ -3,17 +3,35 @@ require "script/conexion.script.php";
 require "model.api.php";
 
 header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Origin: http://192.168.39.102:4200");
 header("Access-Control-Allow-Headers: *");
 
 class controller{
 
 
-    function getPacientes(){
+    function getPacientesHospital($hospital){
 
-        // $model=new model();
+        $model=new model();
 
-        return selectAll('paciente');
+        $query=$model->getTriage($hospital);
+        foreach($query as $t){
+            $q= $model->getPaciente($t['pacienteID']);
+                $datos[]=array(
+                    "id"=>$q['identificacion'],
+                    "nombre"=>$q['nombre'],
+                    "eps"=>$q['eps'],
+                    "telefono"=>$q['telefono_a'],
+                    "direccion"=>$q['direccion'],
+                    "acompaniante"=>$q['nombre_a'],
+                    "antecedentes"=>$q['antecedentes']
+                );
+           
+        }
 
+
+       
+
+        return $datos;
     }
 
     function getHospitales(){
@@ -94,8 +112,8 @@ switch($option){
 
 //   Bloque GET para obtener la info solicitada  
     case "getPacientes":
-
-        $datos=$class->getPacientes();
+        $hospital=$_GET['hospital'];
+        $datos=$class->getPacientesHospital($hospital);
         $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
         $file=file_put_contents("allPacientes.json", $prepFile);
         echo $prepFile;

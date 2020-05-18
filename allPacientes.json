@@ -1,50 +1,11 @@
 [
     {
-        "0": "1051418846",
-        "identificacion": "1051418846",
-        "1": "carlos perez",
+        "id": "1051418846",
         "nombre": "carlos perez",
-        "2": "sura",
         "eps": "sura",
-        "3": "cra 29 99 24",
+        "telefono": "3002193470",
         "direccion": "cra 29 99 24",
-        "4": "karen venera",
-        "nombre_a": "karen venera",
-        "5": "3002193470",
-        "telefono_a": "3002193470",
-        "6": "N",
-        "antecedentes": "N"
-    },
-    {
-        "0": "1065214582",
-        "identificacion": "1065214582",
-        "1": "Linda Daza",
-        "nombre": "Linda Daza",
-        "2": "Coomeva",
-        "eps": "Coomeva",
-        "3": "Calle 123",
-        "direccion": "Calle 123",
-        "4": "juan",
-        "nombre_a": "juan",
-        "5": "300219039",
-        "telefono_a": "300219039",
-        "6": "N",
-        "antecedentes": "N"
-    },
-    {
-        "0": "1065829578",
-        "identificacion": "1065829578",
-        "1": "karen Venera",
-        "nombre": "karen Venera",
-        "2": "Sanitas",
-        "eps": "Sanitas",
-        "3": "av 123",
-        "direccion": "av 123",
-        "4": "Carlos",
-        "nombre_a": "Carlos",
-        "5": "300219",
-        "telefono_a": "300219",
-        "6": "N",
+        "acompaniante": "karen venera",
         "antecedentes": "N"
     }
 ]

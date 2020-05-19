@@ -2,10 +2,21 @@
 
 class model{
 
-    function getDoctores($hospítal){
+  function getDoctores($hospítal){
 
-        $sql="select * from doctor where hospital_ID='$hospítal'";
-        $conn=retornarConexion();
+    $sql="select * from doctor where hospital_ID='$hospítal'";
+    $conn = connect_db();
+    $registros=mysqli_query($conn,$sql);
+      while ($reg=mysqli_fetch_array($registros)){
+        $datos[]=$reg;
+     }
+    return $datos;
+}
+
+    function getHospitales(){
+
+        $sql="select * from hospital";
+        $conn = connect_db();
         $registros=mysqli_query($conn,$sql);
           while ($reg=mysqli_fetch_array($registros)){
             $datos[]=$reg;
@@ -16,7 +27,7 @@ class model{
     function getTriage($hospítal){
 
       $sql="select * from triage where hospital_ID='$hospítal'";
-      $conn=retornarConexion();
+      $conn = connect_db();
       $registros=mysqli_query($conn,$sql);
         while ($reg=mysqli_fetch_array($registros)){
           $datos[]=$reg;
@@ -27,7 +38,7 @@ class model{
     function getHospital($id){
 
       $sql="select * from hospital where id='$id'";
-      $conn=retornarConexion();
+      $conn = connect_db();
       $registros=mysqli_query($conn,$sql);
       $reg=mysqli_fetch_array($registros);
        
@@ -37,7 +48,7 @@ class model{
   function getPaciente($id){
 
     $sql="select * from paciente where identificacion='$id'";
-    $conn=retornarConexion();
+    $conn = connect_db();
     $registros=mysqli_query($conn,$sql);
     $reg=mysqli_fetch_array($registros);
      
@@ -46,16 +57,16 @@ class model{
 
 
     function postHospital($request){
+      
+      $nombre=$request['nombre'];
+      $telefono=$request['telefono'];
+      $direccion=$request['direccion'];
+      $nit=$request['nit'];
+      $representante=$request['representante'];
 
-      $nombre=$request->nombre;
-      $telefono=$request->telefono;
-      $direccion=$request->direccion;
-      $nit=$request->nit;
-      $representate=$request->representante;
-
-      $sql="INSERT INTO hospital('nombre', 'telefono', 'direccion', 'nit', 'representante') 
-                  VALUES ({$nombre},{$telefono},{$direccion},{$nit},{$representate})";
-      $conn=retornarConexion();
+      $sql="INSERT INTO hospital(nombre, telefono, direccion, nit, representante) 
+                  VALUES ('$nombre','$telefono','$direccion','$nit','$representante')";
+      $conn = connect_db();
       if(mysqli_query($conn,$sql))
       {
         http_response_code(201);
@@ -65,10 +76,12 @@ class model{
           'telefono' => $telefono,
           'direccion' => $direccion,
           'nit' => $nit,
-          'representante' => $representate          
+          'representante' => $representante          
         ];
         return json_encode($policy);
       }
+      
+      var_dump($conn->error);
   }
 
 

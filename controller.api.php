@@ -36,7 +36,8 @@ class controller{
 
     function getHospitales(){
 
-        $query=selectAll('hospital');
+        $model=new model();
+        $query=$model->getHospitales('hospital');
 
         foreach($query as $q){
             $datos[]=array(
@@ -93,7 +94,7 @@ class controller{
 
     }
 
-    function postHospital($request){
+    function newHospital($request){
 
         $model=new model();
 
@@ -108,7 +109,6 @@ $option=$_GET['option'];
 $class=new controller();
 $postdata = file_get_contents("php://input");
 switch($option){
-
 
 //   Bloque GET para obtener la info solicitada  
     case "getPacientes":
@@ -149,8 +149,11 @@ switch($option){
         if(isset($postdata) && !empty($postdata))
         {
           // Extraer los datos
-          $request = json_decode($postdata);
+          $request = json_decode($postdata, true);
 
+        //   var_dump($request);
+         echo $insertDatos=$class->newHospital($request);
+            
         }else{
           http_response_code(422);
         

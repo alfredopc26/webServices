@@ -2,8 +2,9 @@
 require "script/conexion.script.php";
 require "model.api.php";
 
+
+
 header("Access-Control-Allow-Origin: http://localhost:4200");
-header("Access-Control-Allow-Origin: http://192.168.39.102:4200");
 header("Access-Control-Allow-Headers: *");
 
 class controller{
@@ -101,6 +102,18 @@ class controller{
         return $model->postHospital($request);
     }
 
+    function newDoctor($request){
+
+        $model=new model();
+
+        return $model->postDoctor($request);
+    }
+    function newPaciente($request){
+
+        $model=new model();
+
+        return $model->postPaciente($request);
+    }
 
 }
 
@@ -161,6 +174,53 @@ switch($option){
 
 
     break;
+
+    case "insertDoctor":
+        if(isset($postdata) && !empty($postdata))
+        {
+          // Extraer los datos
+          $request = json_decode($postdata, true);
+
+        //   var_dump($request);
+         echo $insertDatos=$class->newDoctor($request);
+            
+        }else{
+          http_response_code(422);
+        
+        }
+
+
+    break;
+
+    case "insertPaciente":
+        if(isset($postdata) && !empty($postdata))
+        {
+          // Extraer los datos
+          $request = json_decode($postdata, true);
+
+        //   var_dump($request);
+         echo $insertDatos=$class->newPaciente($request);
+            
+        }else{
+          http_response_code(422);
+        
+        }
+
+
+    break;
+
+
+    // Bloque para realizar los DELETE correspondientes
+
+    case "borrarDoctor":
+        $model=new model();
+        $doctor=$_GET['id'];
+        $datos=$model->deleteDoctor($doctor);
+        
+        echo $datos;
+
+    break;
+
 
 }
 

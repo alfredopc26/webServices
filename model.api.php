@@ -85,6 +85,90 @@ class model{
   }
 
 
+  
+  function postDoctor($request){
+      
+    $id=$request['id'];
+    $nombre=$request['nombre'];
+    $direccion=$request['direccion'];
+    $telefono=$request['telefono'];
+    $tipo_sangre=$request['tipo_sangre'];
+    $experiencia=$request['experiencia'];
+    $nacimiento=$request['nacimiento'];
+    
+
+    $sql="INSERT INTO doctor(hospital_ID, nombre, direccion, telefono, tipo_sangre, experiencia, nacimiento) 
+                VALUES ('$id','$nombre','$direccion','$telefono','$tipo_sangre','$experiencia','$nacimiento')";
+    $conn = connect_db();
+    if(mysqli_query($conn,$sql))
+    {
+      http_response_code(201);
+      $policy = [
+        'id'    => $id,
+        'nombre' => $nombre,
+        'direccion' => $direccion,
+        'telefono' => $telefono,
+        'tipo_sangre' => $tipo_sangre,
+        'experiencia' => $experiencia,
+        'nacimiento' => $nacimiento          
+      ];
+      return json_encode($policy);
+    }
+    
+    var_dump($conn->error);
+}
+
+  
+function postPaciente($request){
+      
+  $id=$request['identificacion'];
+  $nombre=$request['nombre'];
+  $direccion=$request['direccion'];
+  $telefono=$request['telefono'];
+  $eps=$request['eps'];
+  $acompaniante=$request['acompaniante'];
+  $antecedentes=$request['antecedentes'];
+  
+
+  $sql="INSERT INTO paciente(identificacion, nombre, eps, direccion, nombre_a, telefono_a, antecedentes) 
+              VALUES ('$id','$nombre','$eps','$direccion','$acompaniante','$telefono','$antecedentes')";
+  $conn = connect_db();
+  if(mysqli_query($conn,$sql))
+  {
+    http_response_code(201);
+    $policy = [
+      'id'    => $id,
+      'nombre' => $nombre,
+      'direccion' => $direccion,
+      'telefono' => $telefono,
+      'eps' => $eps,
+      'acompaniante' => $acompaniante,
+      'antecedentes' => $antecedentes          
+    ];
+    return json_encode($policy);
+  }
+  
+  var_dump($conn->error);
+}
+
+
+function deleteDoctor($id){
+      
+
+  $sql="DELETE FROM doctor WHERE id='$id'";
+  $conn = connect_db();
+  if(mysqli_query($conn,$sql))
+  {
+    http_response_code(201);
+    $policy = [
+      'id'    => $id       
+    ];
+    return json_encode($policy);
+  }
+  
+  var_dump($conn->error);
+}
+
 }
 
 ?>

@@ -4,7 +4,7 @@ require "model.api.php";
 
 
 
-header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Origin: http://192.168.39.102:4200");
 header("Access-Control-Allow-Headers: *");
 
 class controller{
@@ -14,9 +14,9 @@ class controller{
 
         $model=new model();
 
-        $query=$model->getTriage($hospital);
-        foreach($query as $t){
-            $q= $model->getPaciente($t['pacienteID']);
+        $query=$model->getPacientes($hospital);
+        foreach($query as $q){
+
                 $datos[]=array(
                     "id"=>$q['identificacion'],
                     "nombre"=>$q['nombre'],
@@ -28,9 +28,6 @@ class controller{
                 );
            
         }
-
-
-       
 
         return $datos;
     }
@@ -81,7 +78,8 @@ class controller{
 
         foreach($query as $q){
             $datos[]=array(
-                "id"=>$q['hospital_ID'],
+                "id"=>$q['id'],
+                "hospital"=>$q['hospital_ID'],
                 "nombre"=>$q['nombre'],
                 "direccion"=>$q['direccion'],
                 "telefono"=>$q['telefono'],
@@ -216,6 +214,15 @@ switch($option){
         $model=new model();
         $doctor=$_GET['id'];
         $datos=$model->deleteDoctor($doctor);
+        
+        echo $datos;
+
+    break;
+
+    case "borrarPaciente":
+        $model=new model();
+        $doctor=$_GET['id'];
+        $datos=$model->deletePaciente($doctor);
         
         echo $datos;
 

@@ -13,6 +13,17 @@ class model{
     return $datos;
 }
 
+function getPacientes($hospítal){
+
+  $sql="select * from paciente where hospital_ID='$hospítal'";
+  $conn = connect_db();
+  $registros=mysqli_query($conn,$sql);
+    while ($reg=mysqli_fetch_array($registros)){
+      $datos[]=$reg;
+   }
+  return $datos;
+}
+
     function getHospitales(){
 
         $sql="select * from hospital";
@@ -123,6 +134,7 @@ function postPaciente($request){
       
   $id=$request['identificacion'];
   $nombre=$request['nombre'];
+  $hospital=$request['hospital'];
   $direccion=$request['direccion'];
   $telefono=$request['telefono'];
   $eps=$request['eps'];
@@ -130,8 +142,8 @@ function postPaciente($request){
   $antecedentes=$request['antecedentes'];
   
 
-  $sql="INSERT INTO paciente(identificacion, nombre, eps, direccion, nombre_a, telefono_a, antecedentes) 
-              VALUES ('$id','$nombre','$eps','$direccion','$acompaniante','$telefono','$antecedentes')";
+  $sql="INSERT INTO paciente(identificacion, hospital_ID, nombre, eps, direccion, nombre_a, telefono_a, antecedentes) 
+              VALUES ('$id','$hospital','$nombre','$eps','$direccion','$acompaniante','$telefono','$antecedentes')";
   $conn = connect_db();
   if(mysqli_query($conn,$sql))
   {
@@ -156,6 +168,23 @@ function deleteDoctor($id){
       
 
   $sql="DELETE FROM doctor WHERE id='$id'";
+  $conn = connect_db();
+  if(mysqli_query($conn,$sql))
+  {
+    http_response_code(201);
+    $policy = [
+      'id'    => $id       
+    ];
+    return json_encode($policy);
+  }
+  
+  var_dump($conn->error);
+}
+
+function deletePaciente($id){
+      
+
+  $sql="DELETE FROM paciente WHERE identificacion='$id'";
   $conn = connect_db();
   if(mysqli_query($conn,$sql))
   {

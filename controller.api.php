@@ -93,6 +93,34 @@ class controller{
 
     }
 
+    function getTriage($hospital){
+
+        $model=new model();
+        $query= $model->getTriage($hospital);
+
+        foreach($query as $q){
+
+            $datosDoctor=$model->getDoctor($q['doctorID']);
+            $datosPaciente=$model->getPaciente($q['pacienteID']);
+
+            $datos[]=array(
+                "id"=>$q['id'],
+                "hospital"=>$q['hospital_ID'],
+                "doctor"=>array('id'=>$datosDoctor['id'], 'nombre'=>$datosDoctor['nombre']),
+                "paciente"=>array('id'=>$datosPaciente['identificacion'], 'nombre'=>$datosPaciente['nombre']),
+                "motivos"=>$q['motivos_consulta'],
+                "diagnostico"=>$q['diagnostico'],
+                "medicamentoR"=>$q['req_medicamento'],
+                "medicamentos"=>$q['medicamento'],
+                "sintomas"=>$q['sintomas'],
+                "covid"=>$q['pos_COVID19']
+            );
+        }
+
+        return $datos;
+
+    }
+
     function newHospital($request){
 
         $model=new model();
@@ -126,7 +154,6 @@ switch($option){
         $hospital=$_GET['hospital'];
         $datos=$class->getPacientesHospital($hospital);
         $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
-        $file=file_put_contents("allPacientes.json", $prepFile);
         echo $prepFile;
     break;
 
@@ -134,7 +161,6 @@ switch($option){
 
         $datos=$class->getHospitales();
         $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
-        $file=file_put_contents("allHospital.json", $prepFile);
         echo $prepFile;
     break;
 
@@ -142,7 +168,6 @@ switch($option){
         $hospital=$_GET['hospital'];
         $datos=$class->getHospital($hospital);
         $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
-        $file=file_put_contents("allHospital.json", $prepFile);
         echo $prepFile;
     break;
 
@@ -150,10 +175,15 @@ switch($option){
         $hospital=$_GET['hospital'];
         $datos=$class->getDoctores($hospital);
         $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
-        $file=file_put_contents("allPDoctores.json", $prepFile);
         echo $prepFile;
     break;
 
+    case "getTriage":
+        $hospital=$_GET['hospital'];
+        $datos=$class->getTriage($hospital);
+        $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
+        echo $prepFile;
+    break;
 // Bloque POST para realizar los insert correspondientes
     
     case "insertHospital":
@@ -207,6 +237,58 @@ switch($option){
 
     break;
 
+    case "insertTriage":
+        if(isset($postdata) && !empty($postdata))
+        {
+          // Extraer los datos
+          $request = json_decode($postdata, true);
+            $sumVal=0;
+            $sintoma="";
+            if($request['medicamentor']){
+                $request['medicamentor']='Y';
+            }else{
+                $request['medicamentor']='N';
+            }
+
+            if($request['dolor_garganta']){
+                $sintoma=$sintoma."Dolor de Garganta,";
+                $sumVal++;
+            }
+            if($request['fiebre']){
+                $sintoma=$sintoma."Fiebre,";
+                $sumVal++;                
+            }
+            if($request['tos']){
+                $sintoma=$sintoma."Tos,"; 
+                $sumVal++;
+            }
+            if($request['fatiga']){
+                $sintoma=$sintoma."Fatiga Muscular,";
+                $sumVal++;
+            }
+            if($request['congestion']){
+                $sintoma=$sintoma."Congestoion";
+                $sumVal++;
+            }
+
+            if($sumVal>=2){
+                $request['covid']='Y';
+            }else{
+                $request['covid']='N';
+            }
+            $request['sintoma']=$sintoma;
+
+          $model=new model();
+         echo $insertDatos=$model->postTriage($request);
+            
+        }else{
+          http_response_code(422);
+        
+        }
+
+
+    break;
+
 
     // Bloque para realizar los DELETE correspondientes
 
@@ -223,6 +305,15 @@ switch($option){
         $model=new model();
         $doctor=$_GET['id'];
         $datos=$model->deletePaciente($doctor);
+        
+        echo $datos;
+
+    break;
+
+    case "borrarTriage":
+        $model=new model();
+        $doctor=$_GET['id'];
+        $datos=$model->deleteTriage($doctor);
         
         echo $datos;
 

@@ -66,7 +66,15 @@ function getPacientes($hospítal){
     return $reg;
 }
 
+function getDoctor($id){
 
+  $sql="select * from doctor where id='$id'";
+  $conn = connect_db();
+  $registros=mysqli_query($conn,$sql);
+  $reg=mysqli_fetch_array($registros);
+   
+  return $reg;
+}
     function postHospital($request){
       
       $nombre=$request['nombre'];
@@ -163,6 +171,42 @@ function postPaciente($request){
   var_dump($conn->error);
 }
 
+function postTriage($request){
+      
+  $hospital=$request['hospital'];
+  $doctor=$request['doctor'];
+  $paciente=$request['paciente'];
+  $motivos=$request['motivo'];
+  $diagnostico=$request['diagnostico'];
+  $medicamentor=$request['medicamentor'];
+  $medicamentos=$request['medicinas'];
+  $sintoma=$request['sintoma'];
+  $covid=$request['covid'];
+  
+
+  $sql="INSERT INTO triage(hospital_ID, doctorID, pacienteID, motivos_consulta, diagnostico, req_medicamento, medicamento, sintomas, pos_COVID19) 
+              VALUES ('$hospital','$doctor','$paciente','$motivos','$diagnostico','$medicamentor','$medicamentos','$sintoma','$covid')";
+  $conn = connect_db();
+  if(mysqli_query($conn,$sql))
+  {
+    http_response_code(201);
+    $policy = [
+      'id'    => mysqli_insert_id($conn),
+      'hospital_ID' => $hospital,
+      'doctorID' => $doctor,
+      'pacienteID' => $paciente,
+      'motivos_consulta' => $motivos,
+      'diagnostico' => $diagnostico,
+      'req_medicamento' => $medicamentor,  
+      'medicamento' => $medicamentos, 
+      'sintomas' => $sintoma,     
+      'pos_COVID19' => $covid,  
+    ];
+    return json_encode($policy);
+  }
+  
+  var_dump($conn->error);
+}
 
 function deleteDoctor($id){
       
@@ -198,6 +242,22 @@ function deletePaciente($id){
   var_dump($conn->error);
 }
 
+function deleteTriage($id){
+      
+
+  $sql="DELETE FROM triage WHERE id='$id'";
+  $conn = connect_db();
+  if(mysqli_query($conn,$sql))
+  {
+    http_response_code(201);
+    $policy = [
+      'id'    => $id       
+    ];
+    return json_encode($policy);
+  }
+  
+  var_dump($conn->error);
+}
 }
 
 ?>

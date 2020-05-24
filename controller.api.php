@@ -19,6 +19,7 @@ class controller{
 
                 $datos[]=array(
                     "id"=>$q['identificacion'],
+                    "hospital"=>$q['hospital_ID'],
                     "nombre"=>$q['nombre'],
                     "eps"=>$q['eps'],
                     "telefono"=>$q['telefono_a'],
@@ -28,6 +29,28 @@ class controller{
                 );
            
         }
+
+        return $datos;
+    }
+
+    function getPaciente($paciente){
+
+        $model=new model();
+
+        $q=$model->getPaciente($paciente);
+
+        $datos=array(
+            "id"=>$q['identificacion'],
+            "hospital"=>$q['hospital_ID'],
+            "nombre"=>$q['nombre'],
+            "eps"=>$q['eps'],
+            "telefono"=>$q['telefono_a'],
+            "direccion"=>$q['direccion'],
+            "acompaniante"=>$q['nombre_a'],
+            "antecedentes"=>$q['antecedentes']
+        );
+           
+        
 
         return $datos;
     }
@@ -93,10 +116,32 @@ class controller{
 
     }
 
-    function getTriage($hospital){
+    function getDoctor($doctor){
 
         $model=new model();
-        $query= $model->getTriage($hospital);
+
+        $q= $model->getDoctor($doctor);
+
+        $datos=array(
+            "id"=>$q['id'],
+            "hospital"=>$q['hospital_ID'],
+            "nombre"=>$q['nombre'],
+            "direccion"=>$q['direccion'],
+            "telefono"=>$q['telefono'],
+            "tiposangre"=>$q['tipo_sangre'],
+            "experiencia"=>$q['experiencia'],
+            "nacimiento"=>$q['nacimiento']
+        );
+        
+
+        return $datos;
+
+    }
+
+    function getTriages($hospital){
+
+        $model=new model();
+        $query= $model->getTriages($hospital);
 
         foreach($query as $q){
 
@@ -116,6 +161,66 @@ class controller{
                 "covid"=>$q['pos_COVID19']
             );
         }
+
+        return $datos;
+
+    }
+
+    function getTriage($triage){
+
+        $model=new model();
+        $q= $model->getTriage($triage);
+
+        $datosDoctor=$model->getDoctor($q['doctorID']);
+        $datosPaciente=$model->getPaciente($q['pacienteID']);
+        $sintomas=explode(",",$q['sintomas']);
+        $dolor_garganta=false;
+        $tos=false;
+        $fiebre=false;
+        $congestion=false;
+        $fatiga=false;
+
+        foreach($sintomas as $s){
+          
+            if($s=="Dolor de Garganta"){
+                $dolor_garganta=true;
+            }
+            if($s=="Fiebre"){
+                $fiebre=true;               
+            }
+            if($s=="Tos"){
+                $tos=true;
+            }
+            if($s=="Fatiga Muscular"){
+                $fatiga=true;
+            }
+            if($s=="Congestion"){
+                $congestion=true;
+            }
+
+        }
+
+        if($q['req_medicamento']=="Y"){
+            $medicamento=true;
+        }else{
+            $medicamento=false;
+        }
+
+            $datos=array(
+                "id"=>$q['id'],
+                "hospital"=>$q['hospital_ID'],
+                "doctor"=>$datosDoctor['id'],
+                "paciente"=>$datosPaciente['identificacion'],
+                "motivos"=>$q['motivos_consulta'],
+                "diagnostico"=>$q['diagnostico'],
+                "medicamentoR"=>$medicamento,
+                "medicamentos"=>$q['medicamento'],
+                "dolor_garganta"=>$dolor_garganta,
+                "tos"=>$tos,
+                "fiebre"=>$fiebre,
+                "congestion"=>$congestion,
+                "fatiga"=>$fatiga
+            );
 
         return $datos;
 
@@ -156,6 +261,12 @@ switch($option){
         $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
         echo $prepFile;
     break;
+    case "getPaciente":
+        $paciente=$_GET['paciente'];
+        $datos=$class->getPaciente($paciente);
+        $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
+        echo $prepFile;
+    break;
 
     case "getHospitales":
 
@@ -178,8 +289,22 @@ switch($option){
         echo $prepFile;
     break;
 
-    case "getTriage":
+    case "getDoctor":
+        $doctor=$_GET['doctor'];
+        $datos=$class->getDoctor($doctor);
+        $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
+        echo $prepFile;
+    break;
+
+    case "getTriages":
         $hospital=$_GET['hospital'];
+        $datos=$class->getTriages($hospital);
+        $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
+        echo $prepFile;
+    break;
+
+    case "getTriage":
+        $hospital=$_GET['triage'];
         $datos=$class->getTriage($hospital);
         $prepFile=json_encode($datos, JSON_PRETTY_PRINT);
         echo $prepFile;
@@ -216,8 +341,6 @@ switch($option){
           http_response_code(422);
         
         }
-
-
     break;
 
     case "insertPaciente":
@@ -267,7 +390,7 @@ switch($option){
                 $sumVal++;
             }
             if($request['congestion']){
-                $sintoma=$sintoma."Congestoion";
+                $sintoma=$sintoma."congestion";
                 $sumVal++;
             }
 
@@ -319,6 +442,89 @@ switch($option){
 
     break;
 
+    // Seccion de editar
+
+    case "editDoctor":
+        if(isset($postdata) && !empty($postdata))
+        {
+          // Extraer los datos
+          $request = json_decode($postdata, true);
+          $model=new model();
+        //   var_dump($request);
+         echo $model->editDoctor($request);
+            
+        }else{
+          http_response_code(422);
+        
+        }
+    break;
+
+    case "editPaciente":
+        if(isset($postdata) && !empty($postdata))
+        {
+          // Extraer los datos
+          $request = json_decode($postdata, true);
+          $model=new model();
+        //   var_dump($request);
+         echo $model->editPaciente($request);
+            
+        }else{
+          http_response_code(422);
+        
+        }
+    break;
+
+    case "editTriage":
+        if(isset($postdata) && !empty($postdata))
+        {
+          // Extraer los datos
+          $request = json_decode($postdata, true);
+            $sumVal=0;
+            $sintoma="";
+            if($request['medicamentoR']){
+                $request['medicamentor']='Y';
+            }else{
+                $request['medicamentor']='N';
+            }
+
+            if($request['dolor_garganta']){
+                $sintoma=$sintoma."Dolor de Garganta,";
+                $sumVal++;
+            }
+            if($request['fiebre']){
+                $sintoma=$sintoma."Fiebre,";
+                $sumVal++;                
+            }
+            if($request['tos']){
+                $sintoma=$sintoma."Tos,"; 
+                $sumVal++;
+            }
+            if($request['fatiga']){
+                $sintoma=$sintoma."Fatiga Muscular,";
+                $sumVal++;
+            }
+            if($request['congestion']){
+                $sintoma=$sintoma."congestion";
+                $sumVal++;
+            }
+
+            if($sumVal>=2){
+                $request['covid']='Y';
+            }else{
+                $request['covid']='N';
+            }
+            $request['sintoma']=$sintoma;
+
+          $model=new model();
+         echo $insertDatos=$model->editTriage($request);
+            
+        }else{
+          http_response_code(422);
+        
+        }
+
+
+    break;
 
 }
 

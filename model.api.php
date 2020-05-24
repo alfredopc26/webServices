@@ -24,7 +24,7 @@ function getPacientes($hospítal){
   return $datos;
 }
 
-    function getHospitales(){
+  function getHospitales(){
 
         $sql="select * from hospital";
         $conn = connect_db();
@@ -35,7 +35,7 @@ function getPacientes($hospítal){
         return $datos;
     }
 
-    function getTriage($hospítal){
+    function getTriages($hospítal){
 
       $sql="select * from triage where hospital_ID='$hospítal'";
       $conn = connect_db();
@@ -75,7 +75,24 @@ function getDoctor($id){
    
   return $reg;
 }
-    function postHospital($request){
+
+function getTriage($id){
+
+  $sql="select * from triage where id='$id'";
+  $conn = connect_db();
+  $registros=mysqli_query($conn,$sql);
+  $reg=mysqli_fetch_array($registros);
+   
+  return $reg;
+}
+
+
+
+
+
+
+
+function postHospital($request){
       
       $nombre=$request['nombre'];
       $telefono=$request['telefono'];
@@ -258,6 +275,118 @@ function deleteTriage($id){
   
   var_dump($conn->error);
 }
+
+
+
+function editDoctor($request){
+      
+  $id=$request['id'];
+  $hospital=$request['hospital'];
+  $nombre=$request['nombre'];
+  $direccion=$request['direccion'];
+  $telefono=$request['telefono'];
+  $tipo_sangre=$request['tiposangre'];
+  $experiencia=$request['experiencia'];
+  $nacimiento=$request['nacimiento'];
+  
+
+  $sql="UPDATE doctor
+  SET nombre='$nombre', direccion='$direccion', telefono='$telefono', tipo_sangre='$tipo_sangre', experiencia='$experiencia', nacimiento='$nacimiento'
+  WHERE id='$id'";
+  $conn = connect_db();
+
+  if(mysqli_query($conn,$sql))
+  {
+    http_response_code(201);
+    $policy = [
+      'id'    => $id,
+      'nombre' => $nombre,
+      'hospital' => $hospital,
+      'direccion' => $direccion,
+      'telefono' => $telefono,
+      'tipo_sangre' => $tipo_sangre,
+      'experiencia' => $experiencia,
+      'nacimiento' => $nacimiento          
+    ];
+    return json_encode($policy);
+  }
+  
+  var_dump($conn->error);
+}
+
+function editPaciente($request){
+      
+  $id=$request['id'];
+  $nombre=$request['nombre'];
+  $hospital=$request['hospital'];
+  $direccion=$request['direccion'];
+  $telefono=$request['telefono'];
+  $eps=$request['eps'];
+  $acompaniante=$request['acompaniante'];
+  $antecedentes=$request['antecedentes'];
+  
+
+  $sql="UPDATE paciente
+  SET nombre='$nombre', eps='$eps', direccion='$direccion', nombre_a='$acompaniante', telefono_a='$telefono', antecedentes='$antecedentes'
+  WHERE identificacion='$id'";
+  $conn = connect_db();
+  if(mysqli_query($conn,$sql))
+  {
+    http_response_code(201);
+    $policy = [
+      'id'    => $id,
+      'hospital'    => $hospital,
+      'nombre' => $nombre,
+      'direccion' => $direccion,
+      'telefono' => $telefono,
+      'eps' => $eps,
+      'acompaniante' => $acompaniante,
+      'antecedentes' => $antecedentes          
+    ];
+    return json_encode($policy);
+  }
+  
+  var_dump($conn->error);
+}
+
+function editTriage($request){
+  $id=$request['id'];  
+  $hospital=$request['hospital'];
+  $doctor=$request['doctor'];
+  $paciente=$request['paciente'];
+  $motivos=$request['motivos'];
+  $diagnostico=$request['diagnostico'];
+  $medicamentor=$request['medicamentor'];
+  $medicamentos=$request['medicamentos'];
+  $sintoma=$request['sintoma'];
+  $covid=$request['covid'];
+  
+
+  $sql="UPDATE triage
+  SET hospital_ID='$hospital', doctorID='$doctor', pacienteID='$paciente', motivos_consulta='$motivos', diagnostico='$diagnostico', req_medicamento='$medicamentor', medicamento='$medicamentos', sintomas='$sintoma', pos_COVID19='$covid'
+  WHERE id='$id'";
+  $conn = connect_db();
+  if(mysqli_query($conn,$sql))
+  {
+    http_response_code(201);
+    $policy = [
+      'id'    => $id,
+      'hospital_ID' => $hospital,
+      'doctorID' => $doctor,
+      'pacienteID' => $paciente,
+      'motivos_consulta' => $motivos,
+      'diagnostico' => $diagnostico,
+      'req_medicamento' => $medicamentor,  
+      'medicamento' => $medicamentos, 
+      'sintomas' => $sintoma,     
+      'pos_COVID19' => $covid,  
+    ];
+    return json_encode($policy);
+  }
+  
+  var_dump($conn->error);
+}
+
 }
 
 ?>

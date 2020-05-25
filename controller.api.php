@@ -4,7 +4,7 @@ require "model.api.php";
 
 
 
-header("Access-Control-Allow-Origin: http://192.168.39.102:4200");
+header("Access-Control-Allow-Origin: http://localhost:4200");
 header("Access-Control-Allow-Headers: *");
 
 class controller{

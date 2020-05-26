@@ -2,7 +2,7 @@
 
 define('DB_HOST','localhost');
 define('DB_USER','root');
-define('DB_PASS','');
+define('DB_PASS','CAperez26');
 define('DB_NAME','centro_salud');
 
 function connect_db(){

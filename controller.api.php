@@ -151,8 +151,8 @@ class controller{
             $datos[]=array(
                 "id"=>$q['id'],
                 "hospital"=>$q['hospital_ID'],
-                "doctor"=>array('id'=>$datosDoctor['id'], 'nombre'=>$datosDoctor['nombre']),
-                "paciente"=>array('id'=>$datosPaciente['identificacion'], 'nombre'=>$datosPaciente['nombre']),
+                "doctor"=>$datosDoctor['nombre'],
+                "paciente"=>$datosPaciente['nombre'],
                 "motivos"=>$q['motivos_consulta'],
                 "diagnostico"=>$q['diagnostico'],
                 "medicamentoR"=>$q['req_medicamento'],
@@ -226,25 +226,6 @@ class controller{
 
     }
 
-    function newHospital($request){
-
-        $model=new model();
-
-        return $model->postHospital($request);
-    }
-
-    function newDoctor($request){
-
-        $model=new model();
-
-        return $model->postDoctor($request);
-    }
-    function newPaciente($request){
-
-        $model=new model();
-
-        return $model->postPaciente($request);
-    }
 
 }
 
@@ -316,15 +297,14 @@ switch($option){
         {
           // Extraer los datos
           $request = json_decode($postdata, true);
-
+          $model=new model();
         //   var_dump($request);
-         echo $insertDatos=$class->newHospital($request);
+         echo $insertDatos=$model->postHospital($request);
             
         }else{
           http_response_code(422);
         
         }
-
 
     break;
 
@@ -333,9 +313,9 @@ switch($option){
         {
           // Extraer los datos
           $request = json_decode($postdata, true);
-
+          $model=new model();
         //   var_dump($request);
-         echo $insertDatos=$class->newDoctor($request);
+         echo $insertDatos=$model->postDoctor($request);
             
         }else{
           http_response_code(422);
@@ -348,9 +328,9 @@ switch($option){
         {
           // Extraer los datos
           $request = json_decode($postdata, true);
-
+          $model=new model();
         //   var_dump($request);
-         echo $insertDatos=$class->newPaciente($request);
+         echo $insertDatos=$model->postPaciente($request);
             
         }else{
           http_response_code(422);
@@ -442,7 +422,7 @@ switch($option){
 
     break;
 
-    // Seccion de editar
+    // Bloque para realizar los UPDATE correspondientes
 
     case "editDoctor":
         if(isset($postdata) && !empty($postdata))

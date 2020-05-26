@@ -424,6 +424,21 @@ switch($option){
 
     // Bloque para realizar los UPDATE correspondientes
 
+    case "editHospital":
+        if(isset($postdata) && !empty($postdata))
+        {
+          // Extraer los datos
+          $request = json_decode($postdata, true);
+          $model=new model();
+        //   var_dump($request);
+         echo $model->editHospital($request);
+            
+        }else{
+          http_response_code(422);
+        
+        }
+    break;
+
     case "editDoctor":
         if(isset($postdata) && !empty($postdata))
         {

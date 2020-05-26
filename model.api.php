@@ -276,6 +276,34 @@ function deleteTriage($id){
   var_dump($conn->error);
 }
 
+function editHospital($request){
+  $id=$request['id'];    
+  $nombre=$request['nombre'];
+  $telefono=$request['telefono'];
+  $direccion=$request['direccion'];
+  $nit=$request['nit'];
+  $representante=$request['representante'];
+
+  $sql="UPDATE hospital
+        SET nombre='$nombre', telefono='$telefono', direccion='$direccion', nit='$nit', representante='$representante' 
+          WHERE id='$id'";
+  $conn = connect_db();
+  if(mysqli_query($conn,$sql))
+  {
+    http_response_code(201);
+    $policy = [
+      'id'    => $id,
+      'nombre' => $nombre,
+      'telefono' => $telefono,
+      'direccion' => $direccion,
+      'nit' => $nit,
+      'representante' => $representante          
+    ];
+    return json_encode($policy);
+  }
+  
+  var_dump($conn->error);
+}
 
 
 function editDoctor($request){
